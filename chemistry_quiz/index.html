@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 8 Chemistry - Term 3 Revision Quiz</title>
+    <meta name="description" content="An interactive, high-fidelity chemistry revision quiz for Year 8 Term 3 Chemistry curriculum.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Particle Background Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-atom pulse-icon"></i>
+                <span>ChemQuiz Y8</span>
+            </div>
+            <div class="header-actions">
+                <button id="themeToggleBtn" aria-label="Toggle Theme" class="icon-btn">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- START CARD -->
+            <section id="startCard" class="quiz-card glassmorphism active-card">
+                <div class="card-badge">Year 8 Science</div>
+                <h1 class="main-title">Term 3 Chemistry</h1>
+                <p class="subtitle">Validate your knowledge of chemical reactions of metals, acids, water, oxygen, and reactivity series. Based on the official Term 3 marking scheme.</p>
+                
+                <div class="stats-overview">
+                    <div class="stat-box">
+                        <i class="fa-solid fa-circle-question text-cyan"></i>
+                        <span class="stat-num">22</span>
+                        <span class="stat-lbl">Questions</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fa-solid fa-clock text-magenta"></i>
+                        <span class="stat-num">~15</span>
+                        <span class="stat-lbl">Minutes</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fa-solid fa-star text-gold"></i>
+                        <span class="stat-num">4</span>
+                        <span class="stat-lbl">Modes</span>
+                    </div>
+                </div>
+
+                <div class="mode-selection">
+                    <h3>Select Quiz Mode</h3>
+                    <div class="mode-grid">
+                        <div class="mode-option active" data-mode="all">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <div class="mode-info">
+                                <span class="mode-name">Complete Revision</span>
+                                <span class="mode-desc">All 22 questions from MS</span>
+                            </div>
+                        </div>
+                        <div class="mode-option" data-mode="mcq">
+                            <i class="fa-solid fa-list-check"></i>
+                            <div class="mode-info">
+                                <span class="mode-name">Multiple Choice</span>
+                                <span class="mode-desc">8 MCQ questions</span>
+                            </div>
+                        </div>
+                        <div class="mode-option" data-mode="blank">
+                            <i class="fa-solid fa-pen-clip"></i>
+                            <div class="mode-info">
+                                <span class="mode-name">Fill in the Blanks</span>
+                                <span class="mode-desc">8 fill-in-the-blank queries</span>
+                            </div>
+                        </div>
+                        <div class="mode-option" data-mode="reason">
+                            <i class="fa-solid fa-brain"></i>
+                            <div class="mode-info">
+                                <span class="mode-name">Give Reason</span>
+                                <span class="mode-desc">6 explanation challenges</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="startQuizBtn" class="btn primary-btn btn-glow">
+                    Start Revision Quiz <i class="fa-solid fa-circle-play"></i>
+                </button>
+            </section>
+
+            <!-- QUIZ PLAY CARD -->
+            <section id="quizCard" class="quiz-card glassmorphism">
+                <div class="quiz-header">
+                    <div class="progress-container">
+                        <div class="progress-bar-label">
+                            <span id="questionNumLbl">Question 1 of 22</span>
+                            <span id="scoreTracker">Score: 0</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="progressBarFill" class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                    <div id="quizTimer" class="quiz-timer">
+                        <i class="fa-solid fa-stopwatch"></i> <span id="timerVal">00:00</span>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-type-badge" id="questionTypeBadge">Multiple Choice</div>
+                    <h2 class="question-text" id="questionText">What is observed when a metal reacts with oxygen?</h2>
+                    
+                    <!-- MCQ Options -->
+                    <div id="mcqOptionsContainer" class="options-container">
+                        <!-- Options injected dynamically -->
+                    </div>
+
+                    <!-- Fill in the Blank Input -->
+                    <div id="blankInputContainer" class="input-container hidden">
+                        <div class="styled-input-wrapper">
+                            <input type="text" id="blankAnswerInput" placeholder="Type your answer here..." autocomplete="off">
+                            <span class="focus-border"></span>
+                        </div>
+                        <button id="submitBlankBtn" class="btn secondary-btn">Submit Answer</button>
+                    </div>
+
+                    <!-- Give Reason Self-Evaluation -->
+                    <div id="reasonContainer" class="reason-container hidden">
+                        <div class="styled-input-wrapper">
+                            <textarea id="reasonAnswerInput" placeholder="Write your explanation here..." rows="4"></textarea>
+                            <span class="focus-border"></span>
+                        </div>
+                        <button id="revealReasonBtn" class="btn secondary-btn">Compare with Marking Scheme</button>
+                        
+                        <div id="evaluationSection" class="evaluation-section hidden">
+                            <div class="model-answer-box">
+                                <h4><i class="fa-solid fa-square-check text-green"></i> Marking Scheme Key Points:</h4>
+                                <p id="modelAnswerText">Because it reacts vigorously and produces heat, which causes the magnesium to burn with a bright flame.</p>
+                            </div>
+                            <div class="self-grading">
+                                <h5>How does your answer compare?</h5>
+                                <div class="grade-buttons">
+                                    <button class="grade-btn wrong" data-grade="0">
+                                        <i class="fa-solid fa-circle-xmark"></i> Incorrect (0 pts)
+                                    </button>
+                                    <button class="grade-btn partial" data-grade="1">
+                                        <i class="fa-solid fa-circle-half-stroke"></i> Partially Correct (1 pt)
+                                    </button>
+                                    <button class="grade-btn correct" data-grade="2">
+                                        <i class="fa-solid fa-circle-check"></i> Correct (2 pts)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="explanationContainer" class="explanation-container hidden">
+                    <div class="explanation-content">
+                        <div class="explanation-icon-wrapper">
+                            <i id="explanationIcon" class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div class="explanation-text-wrapper">
+                            <h4 id="explanationTitle">Explanation</h4>
+                            <p id="explanationText">Explanation goes here...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-footer">
+                    <button id="nextQuestionBtn" class="btn primary-btn hidden">
+                        Next Question <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- RESULTS CARD -->
+            <section id="resultsCard" class="quiz-card glassmorphism">
+                <div class="results-celebration">
+                    <div class="score-ring-container">
+                        <svg class="score-ring" width="160" height="160">
+                            <circle class="score-ring-circle-bg" stroke="#1f293d" stroke-width="12" fill="transparent" r="70" cx="80" cy="80"/>
+                            <circle id="scoreRingCircle" class="score-ring-circle-val" stroke="var(--primary-glow)" stroke-width="12" fill="transparent" r="70" cx="80" cy="80"/>
+                        </svg>
+                        <div class="score-ring-text">
+                            <span id="finalScorePct">0%</span>
+                            <span id="finalScoreFraction">0/0</span>
+                        </div>
+                    </div>
+                    
+                    <h2 id="resultBadge">Lab Assistant</h2>
+                    <h1 class="result-headline">Revision Completed!</h1>
+                    <p id="resultFeedback" class="subtitle">You have successfully revised the Term 3 Chemistry syllabus contents. Good job!</p>
+                </div>
+
+                <div class="results-stats">
+                    <div class="r-stat-box">
+                        <span class="r-stat-lbl">Time Taken</span>
+                        <span id="timeTakenVal" class="r-stat-val">00:00</span>
+                    </div>
+                    <div class="r-stat-box">
+                        <span class="r-stat-lbl">Accuracy</span>
+                        <span id="accuracyVal" class="r-stat-val">0%</span>
+                    </div>
+                    <div class="r-stat-box">
+                        <span class="r-stat-lbl">Questions Solved</span>
+                        <span id="solvedCountVal" class="r-stat-val">0</span>
+                    </div>
+                </div>
+
+                <div class="review-section">
+                    <h3>Review Answers</h3>
+                    <div id="reviewList" class="review-list">
+                        <!-- Injected review list -->
+                    </div>
+                </div>
+
+                <div class="results-footer">
+                    <button id="retryBtn" class="btn primary-btn">
+                        <i class="fa-solid fa-rotate-left"></i> Retake Revision
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>Designed for Abrar's Year 8 Chemistry Prep • Term 3 Revision Program</p>
+        </footer>
+    </div>
+
+    <!-- Script files -->
+    <script src="script.js"></script>
+</body>
+</html>
